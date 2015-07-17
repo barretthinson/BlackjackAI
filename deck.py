@@ -4,18 +4,22 @@ import random
 
 class Card(object):
     def __init__(self, value, suit):
-        self.value = value
         self.suit = suit
         if 1 < value < 11:
             self.name = str(value) + " of " + str(suit)
+            self.value = value
         elif value == 11:
             self.name = "Jack of " + str(suit)
+            self.value = 10
         elif value == 12:
             self.name = "Queen of " + str(suit)
+            self.value = 10
         elif value == 13:
             self.name = "King of " + str(suit)
+            self.value = 10
         else:
             self.name = "Ace of " + str(suit)
+            self.value = 11
 
 
 class Deck(object):
