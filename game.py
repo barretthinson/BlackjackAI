@@ -13,4 +13,7 @@ def getPlayers(number):
 shoe = deck.Deck(6)
 shoe.shuffle()
 players = getPlayers(5)
-dealer = dealer.Dealer(1)
+theDealer = dealer.Dealer(1)
+
+theDealer.begin(shoe, players)
+theDealer.deal(shoe, players)
