@@ -22,16 +22,23 @@ class Dealer(object):
 
     def takeTurn(self, deck):
         handValue = 0
+        acesAs11 = 0
         for card in self.hand:
             handValue += card.value
+            if card.value == 11:
+                acesAs11 += 1
 
-        while handValue < 17:
+        while handValue < 17 or (handValue <= 17 and self.strategy == "hit on soft 17s" and self.isSoft()):
             newCard = deck.draw()
             self.hand.append(newCard)
             handValue += newCard.value
 
-        if self.strategy == "hit on soft 17s" and handValue == 17 and self.isSoft():
-            self.hand.append(newCard)
+            if card.value == 11:
+                acesAs11 += 1
+
+            if handValue > 21 and acesAs11 > 0:
+                handValue -= 10  # make an ace count as 1 instead of 11
+                acesAs11 -= 1
 
     def isSoft(self):
         for card in self.hand:
