@@ -4,6 +4,7 @@ __author__ = 'Barrett Hinson'
 class Dealer(object):
     def __init__(self, strategy):
         self.hand = []
+        self.finalValue = 0;
         if strategy == 1:
             self.strategy = "stand on all 17s"
         else:
@@ -39,6 +40,7 @@ class Dealer(object):
             if handValue > 21 and acesAs11 > 0:
                 handValue -= 10  # make an ace count as 1 instead of 11
                 acesAs11 -= 1
+        self.finalValue = handValue
 
     def isSoft(self):
         for card in self.hand:

@@ -10,17 +10,22 @@ def getPlayers(number):
         newPlayers.append(player.Player("Player " + str(i)))
     return newPlayers
 
+
+def getResults(thisDealer, thePlayers):
+    for thisPlayer in thePlayers:
+        if thisPlayer.finalValue >= thisDealer.finalValue:
+            thisPlayer.giveResult(True)
+        else:
+            thisPlayer.giveResult(False)
+
+
 shoe = deck.Deck(6)
 shoe.shuffle()
-players = getPlayers(5)
+players = getPlayers(1)
 theDealer = dealer.Dealer(2)
 
 theDealer.begin(shoe, players)
-
-for card in theDealer.hand:
-    print(card.name)
-print("")
 theDealer.deal(shoe, players)
 
-for card in theDealer.hand:
-    print(card.name)
+getResults(theDealer, players)
+

@@ -13,7 +13,7 @@ class Player(object):
         else:
             return False  # stay
 
-    def giveResult(self, result):
+    def giveResult(self, win):
         pass
 
 
