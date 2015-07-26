@@ -6,8 +6,8 @@ import player
 
 def getPlayers(number):
     newPlayers = []
-    for i in range(number):
-        newPlayers.append(player.Player("Player " + str(i)))
+    for ind in range(number):
+        newPlayers.append(player.Player("Player " + str(ind)))
     return newPlayers
 
 
@@ -19,13 +19,22 @@ def getResults(thisDealer, thePlayers):
             thisPlayer.giveResult(False)
 
 
+def reset(thisDealer, thePlayers, theDeck):
+    discardPile = []
+    discardPile.extend(thisDealer.hand)
+    thisDealer.hand = []
+    for thisPlayer in thePlayers:
+        discardPile.extend(thisPlayer.hand)
+        thisPlayer.hand = []
+    theDeck.shuffleIn(discardPile)
+
 shoe = deck.Deck(6)
 shoe.shuffle()
-players = getPlayers(1)
+players = getPlayers(5)
 theDealer = dealer.Dealer(2)
 
-theDealer.begin(shoe, players)
-theDealer.deal(shoe, players)
-
-getResults(theDealer, players)
-
+for i in range(1):
+    theDealer.begin(shoe, players)
+    theDealer.deal(shoe, players)
+    getResults(theDealer, players)
+    reset(theDealer, players, shoe)

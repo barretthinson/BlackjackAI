@@ -4,7 +4,7 @@ __author__ = 'Barrett Hinson'
 class Dealer(object):
     def __init__(self, strategy):
         self.hand = []
-        self.finalValue = 0;
+        self.finalValue = 0
         if strategy == 1:
             self.strategy = "stand on all 17s"
         else:
@@ -18,7 +18,7 @@ class Dealer(object):
 
     def deal(self, deck, players):
         for player in players:
-            player.takeTurn(deck)
+            player.takeTurn(deck, self.hand)
         self.takeTurn(deck)
 
     def takeTurn(self, deck):
@@ -34,7 +34,7 @@ class Dealer(object):
             self.hand.append(newCard)
             handValue += newCard.value
 
-            if card.value == 11:
+            if newCard.value == 11:
                 acesAs11 += 1
 
             if handValue > 21 and acesAs11 > 0:
