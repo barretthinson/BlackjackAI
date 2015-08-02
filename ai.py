@@ -74,12 +74,12 @@ class Strategy(object):
         self.timesUsed += 1
         if win:
             self.wins += 1
-        return (1-(self.wins / self.timesUsed))/(self.timesUsed**.05)  # + 1/(self.timesUsed**2)
+        return (1-(self.wins / self.timesUsed))/(self.timesUsed**.05) if self.timesUsed != self.wins else .01
 
     def getLossRating(self):
         if self.timesUsed == 0:
             return 0
-        return (1-(self.wins / self.timesUsed))/(self.timesUsed**.05)  # + 1/(self.timesUsed**2)
+        return (1-(self.wins / self.timesUsed))/(self.timesUsed**.05) if self.timesUsed != self.wins else .01
 
     def getStratText(self):
         hitOnSoftT = "hits if on soft " if self.hitOnSoft == 1 else "hits if less than "
@@ -108,20 +108,31 @@ class Ai(object):
     def chooseStrat(self):
         methodOfChoice = random.randint(1, 100)
 
-        if 1 <= methodOfChoice <= 60:  # 60% of the time get next strategy
+        if 1 <= methodOfChoice <= 30:  # 30% of the time get next strategy
             return self.stratList.get(False)[2]
+        elif 31 <= methodOfChoice <= 60:  # 30% of the time get 2nd strategy (prevents snowballing)
+            if self.stratList.qsize() >= 2:
+                strat1 = self.stratList.get(False)[2]
+                strat2 = self.stratList.get(False)[2]
+                self.stratList.put((strat1.getLossRating(), self.stratNumber, strat1))
+                self.stratNumber += 1
+                return strat2
+            else:
+                return self.stratList.get(False)[2]
         elif 61 <= methodOfChoice <= 80:  # 20% of the time create new strategy from scratch
             return Strategy(None, None)
         else:  # remaining 20% of the time combine the top 2 strategies into a hybrid strategy
-            strat1 = self.stratList.get(False)[2]
-            self.stratList.put((strat1.getLossRating(), self.stratNumber, strat1))
-            self.stratNumber += 1
+            if self.stratList.qsize() >= 2:
+                strat1 = self.stratList.get(False)[2]
+                strat2 = self.stratList.get(False)[2]
+                self.stratList.put((strat1.getLossRating(), self.stratNumber, strat1))
+                self.stratNumber += 1
+                self.stratList.put((strat2.getLossRating(), self.stratNumber, strat2))
+                self.stratNumber += 1
 
-            strat2 = self.stratList.get(False)[2]
-            self.stratList.put((strat2.getLossRating(), self.stratNumber, strat2))
-            self.stratNumber += 1
-
-            return Strategy(strat1, strat2)
+                return Strategy(strat1, strat2)
+            else:
+                return Strategy(None, None)
 
     def getResult(self, win):
         ratio = self.currentStrat.updateLossRating(win)
