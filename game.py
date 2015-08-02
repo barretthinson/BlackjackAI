@@ -13,10 +13,12 @@ def getPlayers(number):
 
 def getResults(thisDealer, thePlayers):
     for thisPlayer in thePlayers:
-        if thisPlayer.finalValue >= thisDealer.finalValue:
-            thisPlayer.giveResult(True)
-        else:
-            thisPlayer.giveResult(False)
+        if thisPlayer.finalValue > 21:
+            thisPlayer.finalValue = 0  # busted
+        if thisDealer.finalValue > 21:
+            thisDealer.finalValue = 0  # busted
+
+        thisPlayer.giveResult(thisPlayer.finalValue >= thisDealer.finalValue)
 
 
 def reset(thisDealer, thePlayers, theDeck):
@@ -33,8 +35,11 @@ shoe.shuffle()
 players = getPlayers(5)
 theDealer = dealer.Dealer(2)
 
-for i in range(1):
+for i in range(1000000):
     theDealer.begin(shoe, players)
     theDealer.deal(shoe, players)
     getResults(theDealer, players)
     reset(theDealer, players, shoe)
+
+for finishedPlayer in players:
+    print(finishedPlayer.getRecap(10))
